@@ -1,240 +1,88 @@
-5.	<!DOCTYPE html>
-6.	<html lang="vi">
-7.	<head>
-8.	    <meta charset="UTF-8">
-9.	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-10.	    <title>AI Gia Sư Tin học THPT</title>
-11.	    
-12.	    <!-- Tailwind CSS -->
-13.	    <script src="https://cdn.tailwindcss.com"></script>
-14.	    
-15.	    <!-- Phosphor Icons -->
-16.	    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-17.	 
-18.	    <!-- Marked.js for Markdown parsing -->
-19.	    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-20.	    
-21.	    <!-- Highlight.js for Code Syntax Highlighting -->
-22.	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-23.	    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-24.	 
-25.	    <style>
-26.	        /* Custom Scrollbar for a premium look */
-27.	        ::-webkit-scrollbar {
-28.	            width: 8px;
-29.	            height: 8px;
-30.	        }
-31.	        ::-webkit-scrollbar-track {
-32.	            background: #1e293b; 
-33.	        }
-34.	        ::-webkit-scrollbar-thumb {
-35.	            background: #475569; 
-36.	            border-radius: 4px;
-37.	        }
-38.	        ::-webkit-scrollbar-thumb:hover {
-39.	            background: #64748b; 
-40.	        }
-41.	 
-42.	        /* Markdown Styles within AI chat bubbles */
-43.	        .prose pre {
-44.	            background-color: #0f172a !important;
-45.	            border-radius: 0.5rem;
-46.	            padding: 1rem;
-47.	            margin-top: 0.5rem;
-48.	            margin-bottom: 0.5rem;
-49.	            overflow-x: auto;
-50.	        }
-51.	        .prose code {
-52.	            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-53.	            font-size: 0.9em;
-54.	            background-color: #1e293b;
-55.	            padding: 0.15rem 0.3rem;
-56.	            border-radius: 0.25rem;
-57.	        }
-58.	        .prose pre code {
-59.	            background-color: transparent;
-60.	            padding: 0;
-61.	            border-radius: 0;
-62.	        }
-63.	        .prose p { margin-bottom: 0.75rem; }
-64.	        .prose h1, .prose h2, .prose h3 { font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; color: #e2e8f0; }
-65.	        .prose h2 { font-size: 1.25rem; }
-66.	        .prose h3 { font-size: 1.1rem; }
-67.	        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-68.	        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-69.	        .prose strong { font-weight: 600; color: #e2e8f0; }
-70.	        .prose a { color: #818cf8; text-decoration: underline; }
-71.	        
-72.	        /* Typing indicator animation */
-73.	        .typing-dot {
-74.	            animation: typing 1.4s infinite ease-in-out both;
-75.	        }
-76.	        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-77.	        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-78.	        @keyframes typing {
-79.	            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
-80.	            40% { transform: scale(1); opacity: 1; }
-81.	        }
-82.	    </style>
-83.	</head>
-84.	<body class="bg-slate-900 text-slate-200 h-screen flex flex-col font-sans overflow-hidden antialiased">
-85.	 
-86.	    <!-- Header -->
-87.	    <header class="bg-slate-950 border-b border-slate-800 p-4 flex items-center justify-between z-10 shadow-md">
-88.	        <div class="flex items-center gap-3">
-89.	            <div class="bg-indigo-600 p-2 rounded-lg text-white">
-90.	                <i class="ph ph-robot text-2xl"></i>
-91.	            </div>
-92.	            <div>
-93.	                <h1 class="text-xl font-bold text-white tracking-wide">AI Gia Sư Tin học THPT</h1>
-94.	                <p class="text-xs text-slate-400">Trợ lý học tập thuật toán & lập trình</p>
-95.	            </div>
-96.	        </div>
-97.	        <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-400 hover:text-white bg-slate-800 rounded-md transition-colors">
-98.	            <i class="ph ph-list text-xl"></i>
-99.	        </button>
-100.	    </header>
-101.	 
-102.	    <!-- Main Container -->
-103.	    <div class="flex flex-1 overflow-hidden relative">
-104.	        
-105.	        <!-- Sidebar -->
-106.	        <aside id="sidebar" class="absolute md:relative z-20 w-64 h-full bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
-107.	            <div class="p-4 flex justify-between items-center md:hidden border-b border-slate-800">
-108.	                <span class="font-semibold text-slate-200">Menu</span>
-109.	                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 transition-colors">
-110.	                    <i class="ph ph-x text-xl"></i>
-111.	                </button>
-112.	            </div>
-113.	            
-114.	            <div class="p-4 flex-1 overflow-y-auto">
-115.	                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Chủ đề phổ biến</h3>
-116.	                <div class="space-y-2">
-117.	                    <button onclick="quickAsk('Giải thích thuật toán sắp xếp nổi bọt (Bubble Sort) bằng C++')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-118.	                        <i class="ph ph-sort-ascending text-indigo-400 group-hover:text-indigo-300"></i>
-119.	                        <span class="text-sm">Bubble Sort</span>
-120.	                    </button>
-121.	                    
-122.	                    <button onclick="quickAsk('Hướng dẫn chi tiết về Mảng 1 chiều trong C++')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-123.	                        <i class="ph ph-brackets-square text-blue-400 group-hover:text-blue-300"></i>
-124.	                        <span class="text-sm">Mảng 1 chiều C++</span>
-125.	                    </button>
-126.	                    
-127.	                    <button onclick="quickAsk('Hướng dẫn vòng lặp for trong Python cho người mới')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-128.	                        <i class="ph ph-arrows-clockwise text-green-400 group-hover:text-green-300"></i>
-129.	                        <span class="text-sm">Vòng lặp For Python</span>
-130.	                    </button>
-131.	                    
-132.	                    <button onclick="quickAsk('Viết chương trình kiểm tra số nguyên tố bằng C++ tối ưu nhất')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-133.	                        <i class="ph ph-math-operations text-purple-400 group-hover:text-purple-300"></i>
-134.	                        <span class="text-sm">Kiểm tra Số nguyên tố</span>
-135.	                    </button>
-136.	                    
-137.	                    <button onclick="quickAsk('Thuật toán tìm kiếm nhị phân (Binary Search) hoạt động như thế nào?')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-138.	                        <i class="ph ph-magnifying-glass text-amber-400 group-hover:text-amber-300"></i>
-139.	                        <span class="text-sm">Tìm kiếm nhị phân</span>
-140.	                    </button>
-141.	
-142.	                    <button onclick="quickAsk('Giải thích cơ bản về Quy hoạch động và bài toán cái túi (Knapsack)')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-143.	                        <i class="ph ph-chart-bar text-pink-400 group-hover:text-pink-300"></i>
-144.	                        <span class="text-sm">Quy hoạch động</span>
-145.	                    </button>
-146.	                    
-147.	                    <button onclick="quickAsk('So sánh và hướng dẫn cài đặt thuật toán duyệt đồ thị BFS và DFS')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-148.	                        <i class="ph ph-graph text-teal-400 group-hover:text-teal-300"></i>
-149.	                        <span class="text-sm">Đồ thị BFS/DFS</span>
-150.	                    </button>
-151.	                    
-152.	                    <button onclick="quickAsk('Đệ quy là gì? Cho ví dụ tính giai thừa hoặc dãy Fibonacci bằng đệ quy')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-153.	                        <i class="ph ph-tree-structure text-rose-400 group-hover:text-rose-300"></i>
-154.	                        <span class="text-sm">Đệ quy (Recursion)</span>
-155.	                    </button>
-156.	                    
-157.	                    <button onclick="quickAsk('Hướng dẫn các hàm xử lý xâu (chuỗi) thường dùng trong C++')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
-158.	                        <i class="ph ph-text-aa text-cyan-400 group-hover:text-cyan-300"></i>
-159.	                        <span class="text-sm">Xử lý xâu C++</span>
-160.	                    </button>
-161.	                </div>
-162.	            </div>
-163.	            
-164.	            <div class="p-4 border-t border-slate-800">
-165.	                <button onclick="clearChat()" class="w-full p-3 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition flex items-center justify-center gap-2 text-sm font-medium border border-red-500/20">
-166.	                    <i class="ph ph-trash"></i>
-167.	                    Xóa cuộc trò chuyện
-168.	                </button>
-169.	            </div>
-170.	        </aside>
-171.	 
-172.	        <!-- Overlay for mobile sidebar -->
-173.	        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden transition-opacity"></div>
-174.	 
-175.	        <!-- Chat Area -->
-176.	        <main class="flex-1 flex flex-col bg-slate-900 w-full relative">
-177.	            
-178.	            <div id="chatBox" class="flex-1 p-4 md:p-6 overflow-y-auto scroll-smooth space-y-6 pb-32">
-179.	                <!-- Welcome Message -->
-180.	                <div class="flex gap-4 items-start w-full max-w-3xl mx-auto">
-181.	                    <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-900/20">
-182.	                        <i class="ph ph-robot text-xl text-white"></i>
-183.	                    </div>
-184.	                    <div class="flex-1 bg-slate-800 rounded-2xl p-4 md:p-5 rounded-tl-none border border-slate-700 shadow-sm">
-185.	                        <div class="prose text-slate-200">
-186.	                            <p>Chào em! Thầy là <strong>AI Gia Sư Tin học</strong>.</p>
-187.	                            <p>Thầy có thể giúp em:</p>
-188.	                            <ul>
-189.	                                <li>Giải thích các khái niệm lập trình (C++, Python, Pascal...).</li>
-190.	                                <li>Phân tích và giải các bài toán thuật toán THPT / HSG.</li>
-191.	                                <li>Tìm và sửa lỗi (debug) trong code của em.</li>
-192.	                            </ul>
-193.	                            <p>Em muốn học bài gì hôm nay nào?</p>
-194.	                        </div>
-195.	                    </div>
-196.	                </div>
-197.	            </div>
-198.	 
-199.	            <!-- Input Area -->
-200.	            <div class="absolute bottom-0 w-full p-4 bg-slate-950/90 backdrop-blur-md border-t border-slate-800">
-201.	                <!-- Khu vực hiển thị file đính kèm -->
-202.	                <div id="attachmentPreview" class="max-w-3xl mx-auto flex flex-wrap gap-2 mb-2 empty:hidden"></div>
-203.	                
-204.	               <div class="sticky bottom-0 w-full p-4 bg-slate-950/90 backdrop-blur-md border-t border-slate-800">
-205.	                    <!-- Nút đính kèm -->
-206.	                    <input type="file" id="fileInput" class="hidden" accept="image/*,.txt,.cpp,.c,.py,.js,.html,.css,.java,.pas" multiple onchange="handleFileSelect(event)">
-207.	                    <button 
-208.	                        onclick="document.getElementById('fileInput').click()" 
-209.	                        class="p-3 mb-1 text-slate-400 hover:text-indigo-400 hover:bg-slate-800 rounded-xl transition flex items-center justify-center h-[44px] w-[44px] shrink-0"
-210.	                        title="Đính kèm ảnh hoặc file code"
-211.	                    >
-212.	                        <i class="ph ph-paperclip text-xl"></i>
-213.	                    </button>
-214.	                    
-215.	                    <!-- Sửa lỗi: Đóng thẻ textarea và thêm sự kiện onkeydown -->
-216.	                    <textarea 
-217.	                        id="userInput" 
-218.	                        rows="1"
-219.	                        class="flex-1 bg-transparent border-none text-slate-200 placeholder-slate-500 p-3 focus:outline-none resize-none max-h-32"
-220.	                        placeholder="Nhập câu hỏi, chèn ảnh hoặc file code..."
-221.	                        onkeydown="handleKeyDown(event)"
-222.	                    ></textarea>
-223.	
-224.	                    <!-- Sửa lỗi: Thêm nút Gửi đã bị thiếu mất ở bản cập nhật trước -->
-225.	                    <button 
-226.	                        id="sendBtn" 
-227.	                        onclick="sendMessage()" 
-228.	                        class="p-3 mb-1 text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition shadow-md shadow-indigo-900/20 flex items-center justify-center h-[44px] w-[44px] shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-229.	                        title="Gửi tin nhắn"
-230.	                    >
-231.	                        <i class="ph-fill ph-paper-plane-right text-lg"></i>
-232.	                    </button>
-233.	                </div>
-234.	                <div class="text-center mt-2">
-235.	                    <span class="text-[10px] text-slate-500">AI có thể mắc sai lầm. Vui lòng kiểm tra lại code trước khi nộp bài.</span>
-236.	                </div>
-237.	            </div>
-238.	            
-239.	        </main>
-240.	    </div>
-241.	 
-242.	   
-607.	</body>
-608.	</html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Gia Sư Tin học THPT</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Highlight -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:sans-serif;
+}
+
+#chatBox{
+height:70vh;
+overflow:auto;
+}
+
+.message{
+padding:12px;
+border-radius:10px;
+margin:10px 0;
+max-width:700px;
+}
+
+.user{
+background:#4338ca;
+margin-left:auto;
+}
+
+.ai{
+background:#1e293b;
+}
+
+textarea{
+resize:none;
+}
+
+</style>
+
+</head>
+
+<body class="p-6">
+
+<h1 class="text-2xl font-bold mb-4">AI Gia Sư Tin học THPT</h1>
+
+<div id="chatBox"></div>
+
+<div class="flex gap-2 mt-4">
+
+<textarea
+id="userInput"
+rows="1"
+class="flex-1 border p-2 rounded text-black"
+placeholder="Nhập câu hỏi..."
+></textarea>
+
+<button
+id="sendBtn"
+class="bg-indigo-600 px-4 py-2 rounded"
+onclick="sendMessage()"
+>
+Gửi
+</button>
+
+</div>
+
+<script src="script.js" defer></script>
+
+</body>
+</html>	
