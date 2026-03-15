@@ -395,7 +395,8 @@ Phong cách:
             // CHÚ Ý KHÚC NÀY ĐỂ SỬA LỖI 404 CỦA BẠN:
             // ==========================================
             // Dòng dưới là URL dùng cho môi trường Canvas ở đây.
-            let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            const modelName = "gemini-1.5-flash"; 
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
             
             // => NẾU BẠN CHẠY TRÊN MÁY CÁ NHÂN, HÃY SỬA LẠI (HOẶC UNCOMMENT DÒNG BÊN DƯỚI) SANG BẢN CHÍNH THỨC NÀY:
             // url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
