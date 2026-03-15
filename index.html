@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
  
     <style>
-        /* Custom Scrollbar for a premium look */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -35,7 +35,7 @@
             background: #64748b; 
         }
  
-        /* Markdown Styles within AI chat bubbles */
+        /* Markdown Styles */
         .prose pre {
             background-color: #0f172a !important;
             border-radius: 0.5rem;
@@ -126,7 +126,6 @@
                         <span class="text-sm">Tìm kiếm nhị phân</span>
                     </button>
                     
-                    <!-- Các chủ đề mới thêm vào -->
                     <button onclick="quickAsk('Giải thích cơ bản về Quy hoạch động và bài toán cái túi (Knapsack)')" class="w-full text-left p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition border border-slate-700/50 flex items-center gap-2 group">
                         <i class="ph ph-chart-bar text-pink-400 group-hover:text-pink-300"></i>
                         <span class="text-sm">Quy hoạch động</span>
@@ -212,7 +211,7 @@
     </div>
  
     <script>
-        // API Configuration setup - provided by runtime environment
+        // CHÚ Ý: ĐIỀN API KEY CỦA BẠN VÀO ĐÂY KHI CHẠY Ở MÁY CÁ NHÂN
         const apiKey = "AIzaSyAZH1NbImbwgkyQL8xveKQWJrPwWtd-0a8"; 
  
         const systemPrompt = `
@@ -344,7 +343,6 @@ Phong cách:
             const input = document.getElementById("userInput");
             input.value = text;
             
-            // Close sidebar on mobile after selecting
             if (window.innerWidth < 768 && !document.getElementById('sidebar').classList.contains('-translate-x-full')) {
                 toggleSidebar();
             }
@@ -358,7 +356,6 @@ Phong cách:
             }
         }
  
-        // Exponential backoff for API Calls
         async function fetchWithBackoff(url, options, retries = 5) {
             const delays = [1000, 2000, 4000, 8000, 16000];
             for (let i = 0; i < retries; i++) {
@@ -384,7 +381,6 @@ Phong cách:
             
             if (!text) return;
             
-            // Setup UI for loading
             isWaitingForResponse = true;
             input.value = "";
             input.style.height = "auto";
@@ -395,7 +391,16 @@ Phong cách:
             addMessage(text, "user");
             addTypingIndicator();
  
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // ==========================================
+            // CHÚ Ý KHÚC NÀY ĐỂ SỬA LỖI 404 CỦA BẠN:
+            // ==========================================
+            // Dòng dưới là URL dùng cho môi trường Canvas ở đây.
+            let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            // => NẾU BẠN CHẠY TRÊN MÁY CÁ NHÂN, HÃY SỬA LẠI (HOẶC UNCOMMENT DÒNG BÊN DƯỚI) SANG BẢN CHÍNH THỨC NÀY:
+            // url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // ==========================================
+            
             const body = {
                 contents: [{ parts: [{ text: text }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
@@ -419,9 +424,8 @@ Phong cách:
             } catch (error) {
                 console.error("API Error:", error);
                 removeTypingIndicator();
-                addMessage("⚠️ Đã xảy ra lỗi kết nối mạng hoặc hệ thống. Vui lòng thử lại sau ít phút.", "ai");
+                addMessage(`⚠️ Đã xảy ra lỗi hệ thống (Có thể do lỗi model hoặc API Key không hợp lệ). Bạn hãy bật F12 console để xem chi tiết.`, "ai");
             } finally {
-                // Restore UI
                 isWaitingForResponse = false;
                 input.disabled = false;
                 sendBtn.disabled = false;
@@ -432,7 +436,6 @@ Phong cách:
  
         function clearChat() {
             const chatBox = document.getElementById("chatBox");
-            // Keep only the first welcome message
             const firstChild = chatBox.firstElementChild;
             chatBox.innerHTML = '';
             chatBox.appendChild(firstChild);
@@ -443,4 +446,4 @@ Phong cách:
         }
     </script>
 </body>
-</html>
+</html>       
